@@ -6,7 +6,7 @@ A GitHub action that will comment on the relevant open PR with a file contents w
 
 - Requires the `GITHUB_TOKEN` secret.
 - Requires the comment's artifact in the `msg` parameter.
-- Supports `push` and `pull_request` event types.
+- Supports `push`, `pull_request` and `pull_request_target` event types.
 
 ### Sample workflow
 
