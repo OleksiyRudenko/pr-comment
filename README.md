@@ -42,8 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: templates/
-          # workflows syntax doesn't allow to set array as an action params, hence JSON
-          sources: '[ "header.md", "${{ github.event.label.name }}.md", "footer.md" ]'
+          args: header.md "${{ github.event.label.name }}.md" footer.md
 ```
 
 
