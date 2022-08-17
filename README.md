@@ -5,15 +5,18 @@ A GitHub action that will comment on the relevant open PR with a file contents w
 ## Usage
 
 - Requires the `GITHUB_TOKEN` secret.
-- Requires the comment's artifact in the `msg` parameter.
+- Requires the comment's artifact in the `path` parameter
+  or multiple sources encoded in JSON in `SOURCES` env param
+  and base path in `path` parameter
 - Supports `push`, `pull_request` and `pull_request_target` event types.
+- Supports multiple content sources enabling comment customization
+  based on PR details available within the workflow context
 
 ### Sample workflow
 
-```
-  
+```yaml
 name: example
-on: pull_request
+on: pull_request, pull_request_target
 jobs:
   example:
     name: example
@@ -29,10 +32,18 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: results
-      - name: comment PR
+      - name: comment PR - single source
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: results/results.txt
+      - name: comment PR - multiple content sources
+        uses: machine-learning-apps/pr-comment@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCES: '["header.md", "${{ github.event.label.name }}.md", "footer.md"]'
+          # workflows syntax doesn't allow array as action params, hence JSON via ENV
+        with:
+          path: .github/templates/
 ```
