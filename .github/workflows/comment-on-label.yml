@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: .github/templates/${{ github.event.label.name }}.md
-      - name: Add comment from multiple sources
+      - name: Add comment from multiple sources with a given common basepath
         uses: oleksiyrudenko/pr-comment@v1.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
