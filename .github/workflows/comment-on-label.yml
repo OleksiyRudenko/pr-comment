@@ -31,12 +31,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: .github/templates/${{ github.event.label.name }}.md
-          # workflows syntax doesn't allow array as action params, hence JSON
-          sources: '["header.md", "${{ github.event.label.name }}.md", "footer.md"]'
       - name: Add comment from multiple sources
         uses: oleksiyrudenko/pr-comment@v1.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # workflows syntax doesn't allow array as action params, hence JSON
+          SOURCES: '["header.md", "${{ github.event.label.name }}.md", "footer.md"]'
         with:
           path: .github/templates/
-          args: header.md "${{ github.event.label.name }}.md" footer.md

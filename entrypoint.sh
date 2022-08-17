@@ -40,11 +40,7 @@ end
 
 puts Dir.entries(".")
 
-if ARGV.length < 2
-  sources = [ ARGV[0] ]
-else
-  sources = ARGV.drop(1)
-end
+sources = ENV.has_key?('SOURCES') ? JSON.parse(ENV['SOURCES']) : [ ARGV[0] ]
 
 message = sources.map{ | file_path | File.read(file_path) }.join("\n")
 
