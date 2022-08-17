@@ -1,0 +1,42 @@
+# This action adds checklists from .github/templates/
+# to PR conversations
+# when a PR is targeted at a specific branch (branches)
+# and a specific label (labels) is assigned.
+#
+# Checklist file name must match label name and end with '.md' extension.
+#
+# This action uses:
+# - actions/checkout@v3
+# - oleksiyrudenko/pr-comment@v1.2 (an updated fork of machine-learning-apps/pr-comment@master)
+
+on:
+  pull_request_target:
+    types: [ labeled ]
+    branches:
+      - master
+      - main
+
+jobs:
+  add-pr-checklist:
+    # define Eligible Labels; consider also using startsWith method
+    # (see also https://docs.github.com/en/actions/learn-github-actions/expressions#startswith)
+    if: contains( fromJson('["label1", "label2"]'), github.event.label.name )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add comment from a single source
+        uses: oleksiyrudenko/pr-comment@v1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: .github/templates/${{ github.event.label.name }}.md
+          # workflows syntax doesn't allow array as action params, hence JSON
+          sources: '["header.md", "${{ github.event.label.name }}.md", "footer.md"]'
+      - name: Add comment from multiple sources
+        uses: oleksiyrudenko/pr-comment@v1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: .github/templates/
+          # workflows syntax doesn't allow to set array as an action params, hence JSON
+          sources: '["header.md", "${{ github.event.label.name }}.md", "footer.md"]'

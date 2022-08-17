@@ -34,11 +34,19 @@ else
   end
   pr_number = pr["number"]
 end
-file_path = ARGV[0]
+
+# if env INPUT_SOURCES is not defined then ARV[0] used as a source
+# otherwise INPUT_SOURCES is assumed a JSON defining an array of strings (filenames)
 
 puts Dir.entries(".")
 
-message = File.read(file_path)
+if ENV.key?("INPUT_SOURCES")
+  sources = JSON.parse(ENV["INPUT_SOURCES"])
+else
+  sources = [ ARGV[0] ]
+end
+
+message = sources.map{ | file_path | File.read(file_path) }.join("\n")
 
 coms = github.issue_comments(repo, pr_number)
 
